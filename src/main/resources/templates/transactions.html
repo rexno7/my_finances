@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Video Games</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../static/css/financials.css" 
+          th:href="@{/css/financials.css}" />
+  </head>
+  <body>
+    <div th:replace="~{fragments/heading :: heading(2)}"></div>
+    <div id="txn-search">
+      <form th:action="@{/finances/transactions}" id="searchForm">
+        <div>
+          <input id="keyword" type="search" name="keyword" th:value="${keyword}" required placeholder="Enter keyword" />
+          <button type="submit">Search</button>
+        </div>
+      </form>
+      <form th:action="@{/finances/transactions}" id="clearForm">
+        <button id="btnClear" type="submit">Clear</button>
+      </form>
+    </div>
+    <div th:switch="${transactionPage.size}">
+      <p th:case="0">No transactions found</p>
+      <div th:case="*" class="txn-table">
+        <table>
+          <thead>
+            <tr>
+              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
+              <th>Posted</th>
+              <th th:replace="~{fragments/sorting :: sorting('accountNum', 'Account')}"></th>
+              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}" class="grow"></th>
+              <th th:replace="~{fragments/sorting :: sorting('amount', 'Amount')}"></th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="transaction : ${transactionPage.content}">
+              <td th:text="${#dates.format(transaction.transactionDate, 'MM/dd')}"></td>
+              <td th:text="${#dates.format(transaction.postingDate, 'MM/dd')}"></td>
+              <td th:text="${transaction.accountNum}"></td>
+              <td th:text="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" class="grow"></td>
+              <td class="number" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
+              <td th:text="${transaction.category}"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <div th:if="${transactionPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+            <a th:href="@{/finances/transactions(size=${transactionPage.size}, page=${pageNumber})}" th:text=${pageNumber}></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

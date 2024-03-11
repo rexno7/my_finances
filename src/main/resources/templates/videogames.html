@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Video Games</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../static/css/videogames.css" th:href="@{/css/videogames.css}" />
+  </head>
+  <body>
+    <div th:switch="${videoGames}">
+      <p th:case="null">No Video Games</p>
+      <div th:case="*">
+        <h1>Video Game Database</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Platform</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="videoGame : ${videoGames}">
+              <td th:text="${videoGame.name}"></td>
+              <td th:text="${videoGame.platform}"></td>
+              <td><div class="abutton"><a th:href="@{/videogames/{id}/edit(id=${videoGame.id})}" class="edit">Edit</a></div></td>
+              <td><a th:href="@{/videogames/{id}/delete(id=${videoGame.id})}" class="caution">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p><a th:href="@{/videogames/new}">Add a game</a></p>
+  </body>
+</html>

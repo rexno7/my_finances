@@ -1,0 +1,7 @@
+<ul id="heading" class="heading" th:fragment="heading(selected)">
+  <li><a href="#" class="home">MY FINANCES</a></li>
+  <li><a href="#" th:class="${selected == 1} ? 'selected'">OVERVIEW</a></li>
+  <li><a th:href="@{'/finances/transactions'}" th:class="${selected == 2} ? 'selected'">TRANSACTIONS</a></li>
+  <li><a th:href="@{'/finances/statements/upload'}" th:class="${selected == 3} ? 'selected'">UPLOAD</a></li>
+  <li><a href="#" th:class="${selected == 4} ? 'selected'">RULES</a></li>
+</ul>

@@ -4,11 +4,15 @@ import java.text.ParseException;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import mywebsite.finances.account.Account;
 
 @Entity
 public class Transaction {
@@ -20,8 +24,9 @@ public class Transaction {
   @NotBlank(message = "rawString is required")
   private String rawString;
 
-  @NotBlank(message = "accountNum is required")
-  private String accountNum;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "account_id", referencedColumnName = "id")
+  private Account account;
 
   private float amount;
 
@@ -48,11 +53,11 @@ public class Transaction {
 
   }
 
-  public Transaction(String rawString, String accountNum, float amount, String merchant,
+  public Transaction(String rawString, Account account, float amount, String merchant,
       Category category, Date transactionDate, Date postingDate, String description,
       String referenceNum) throws ParseException {
     this.rawString = rawString;
-    this.accountNum = accountNum;
+    this.account = account;
     this.amount = amount;
     this.merchant = merchant;
     this.category = category;
@@ -77,12 +82,12 @@ public class Transaction {
     this.rawString = rawString;
   }
 
-  public String getAccountNum() {
-    return accountNum;
+  public Account getAccount() {
+    return account;
   }
 
-  public void setAccountNum(String accountNum) {
-    this.accountNum = accountNum;
+  public void setAccount(Account account) {
+    this.account = account;
   }
 
   public float getAmount() {
@@ -159,7 +164,7 @@ public class Transaction {
 
   @Override
   public String toString() {
-    return "Transaction [id=" + id + ", rawString=" + rawString + ", accountNum=" + accountNum
+    return "Transaction [id=" + id + ", rawString=" + rawString + ", account=" + account
         + ", amount=" + amount + ", merchant=" + merchant + ", nickname=" + nickname + ", category="
         + category + ", label=" + label + ", transactionDate=" + transactionDate + ", postingDate="
         + postingDate + ", description=" + description + ", referenceNum=" + referenceNum + "]";

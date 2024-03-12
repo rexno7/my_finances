@@ -1,6 +1,5 @@
 package mywebsite.finances.statement.parser;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,8 +7,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import mywebsite.finances.account.Account;
+import mywebsite.finances.account.AccountRepository;
 import mywebsite.finances.transactions.Category;
 import mywebsite.finances.transactions.Transaction;
 
@@ -22,7 +24,12 @@ public class BoACCStatementParser implements StatementParser {
   private final Pattern STATEMENT_PERIOD_REGEX = Pattern
       .compile("(\\w+)\\s\\d+\\s-\\s(\\w+)\\s\\d+,\\s(\\d{4})");
 
+  private final Pattern ACCOUNT_PATTERN = Pattern.compile("Account# \\d{4} \\d{4} \\d{4} (\\d{4})");
+
   public static final String TYPE = "BoACC";
+
+  @Autowired
+  private AccountRepository accountRepository;
 
   public String getType() {
     return TYPE;
@@ -33,13 +40,21 @@ public class BoACCStatementParser implements StatementParser {
     return matcher.find();
   }
 
-  public List<Transaction> parse(String[] statementLines) throws IOException, ParseException {
+  public List<Transaction> parse(String[] statementLines) throws Exception {
     String statementPeriod = null;
-    String boaAccountNumber = null;
+    Account account = null;
     List<Transaction> transactions = new ArrayList<Transaction>();
     for (String line : statementLines) {
       if (statementPeriod == null && STATEMENT_PERIOD_REGEX.matcher(line).find()) {
         statementPeriod = line;
+      }
+      if (account == null && ACCOUNT_PATTERN.matcher(line).find()) {
+        String accountNumber = line.substring(line.length() - 4);
+        account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null) {
+          account = new Account(accountNumber, "Bank of America", "Visa Signature");
+          accountRepository.save(account);
+        }
       }
       Matcher transactionMatcher = TRANSACTION_REGEX.matcher(line);
       if (transactionMatcher.find()) {
@@ -49,14 +64,11 @@ public class BoACCStatementParser implements StatementParser {
         String referenceNum = transactionMatcher.group(4);
         String accountNum = transactionMatcher.group(5);
         Float amount = Float.parseFloat(transactionMatcher.group(6).replace(",", ""));
-        if (accountNum == null) {
-          referenceNum = null;
-          accountNum = boaAccountNumber;
-        } else if (boaAccountNumber == null) {
-          boaAccountNumber = transactionMatcher.group(5);
+        if (accountNum != null && !accountNum.equals(account.getAccountNumber())) {
+          throw new Exception("Unknown account number: \"" + accountNum + "\"");
         }
         transactions.add(
-            new Transaction(line, accountNum, amount, merchant, Category.UNDEFINED,
+            new Transaction(line, account, amount, merchant, Category.UNDEFINED,
                 calcTransactionDate(statementPeriod, transactionDate),
                 calcTransactionDate(statementPeriod, postingDate), null, referenceNum));
       }

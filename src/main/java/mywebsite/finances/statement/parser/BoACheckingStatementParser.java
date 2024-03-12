@@ -52,38 +52,35 @@ public class BoACheckingStatementParser implements StatementParser {
     List<Transaction> transactions = new ArrayList<Transaction>();
     List<String> statementLinesList = Arrays.asList(statementLines);
     Iterator<String> statementIterator = statementLinesList.iterator();
-    String accountNumber = null;
+    Account account = null;
     Date statementDate = null;
-    Double endingValue = null;
+    Double statementEndValue = null;
     while (statementIterator.hasNext()) {
       String line = statementIterator.next();
-      if (accountNumber == null && line.matches(ACCOUNT_NUMBER_REGEX)) {
-        accountNumber = line.substring(line.length() - 4);
-      } else if (endingValue == null) {
+      if (account == null && line.matches(ACCOUNT_NUMBER_REGEX)) {
+        String accountNumber = line.substring(line.length() - 4);
+        account = accountRepository.findByAccountNumber(accountNumber);
+        if (account == null) {
+          account = new Account(accountNumber, "Bank of America", "Adv Relationship Banking");
+          accountRepository.save(account);
+        }
+      } else if (statementEndValue == null) {
         Matcher matcher = BALANCE_PATTERN.matcher(line);
         if (matcher.find()) {
-          System.out.println("found");
           statementDate = (new SimpleDateFormat("MMMM dd, yyyy")).parse(matcher.group(1));
-          endingValue = Double.parseDouble(matcher.group(2).replace(",", ""));
-          Account account = accountRepository.findByAccountNumber(accountNumber);
-          if (account == null) {
-            account = new Account(accountNumber, "Bank of America", "Adv Relationship Banking");
-          }
-          account.addToAccountValueHistory(statementDate, endingValue);
+          statementEndValue = Double.parseDouble(matcher.group(2).replace(",", ""));
+          account.addToAccountValueHistory(statementDate, statementEndValue);
           accountRepository.save(account);
         }
       } else if (line.matches(DEPOSITS_HEADER)) {
         transactions.addAll(
-            parseTransactions(
-                statementIterator,
-                "Total deposits and other additions.*",
-                accountNumber));
+            parseTransactions(statementIterator, "Total deposits and other additions.*", account));
       } else if (line.matches(WITHDRAWALS_HEADER)) {
         transactions.addAll(
             parseTransactions(
                 statementIterator,
                 "Total withdrawals and other subtractions.*",
-                accountNumber));
+                account));
         break;
       }
     }
@@ -91,7 +88,7 @@ public class BoACheckingStatementParser implements StatementParser {
   }
 
   private List<Transaction> parseTransactions(Iterator<String> statementIterator,
-      String endingRegex, String accountNum) throws NumberFormatException, ParseException {
+      String endingRegex, Account account) throws NumberFormatException, ParseException {
     List<Transaction> transactions = new ArrayList<Transaction>();
     while (statementIterator.hasNext()) {
       String line = statementIterator.next().strip();
@@ -106,10 +103,9 @@ public class BoACheckingStatementParser implements StatementParser {
         Matcher matcher = TRANSACTION_PATTERN.matcher(line);
         matcher.find();
         transactions.add(
-            new Transaction(line, accountNum, Float.parseFloat(matcher.group(3).replace(",", "")),
+            new Transaction(line, account, Float.parseFloat(matcher.group(3).replace(",", "")),
                 matcher.group(2), Category.UNDEFINED, SIMPLE_DATE_FORMATER.parse(matcher.group(1)),
                 null, null, null));
-        System.out.println(line);
       }
     }
     return transactions;

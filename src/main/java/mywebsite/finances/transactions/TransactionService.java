@@ -68,7 +68,9 @@ public class TransactionService {
           break;
         }
         case ("acctNo"): {
-          list.sort((t1, t2) -> t1.getAccountNum().compareTo(t2.getAccountNum()));
+          list.sort(
+              (t1, t2) -> t1.getAccount().getAccountNumber()
+                  .compareTo(t2.getAccount().getAccountNumber()));
           break;
         }
         case ("amount"): {

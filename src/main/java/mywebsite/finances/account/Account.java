@@ -33,7 +33,7 @@ public class Account {
 
   @ElementCollection
   @CollectionTable(name = "account_value_history", joinColumns = {
-      @JoinColumn(name = "order_id", referencedColumnName = "id") })
+      @JoinColumn(name = "account_id", referencedColumnName = "id") })
   @MapKeyColumn(name = "snapshot_date")
   @Column(name = "value")
   private Map<Date, Double> accountValueHistory;

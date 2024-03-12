@@ -13,5 +13,5 @@ public interface StatementParser {
 
   String getType();
 
-  List<Transaction> parse(String[] statementLines) throws IOException, ParseException;
+  List<Transaction> parse(String[] statementLines) throws IOException, ParseException, Exception;
 }

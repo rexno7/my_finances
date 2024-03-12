@@ -1,18 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>Upload Statement</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../static/css/financials.css" 
-          th:href="@{/css/financials.css}" />
+  	<script th:replace="fragments/heading :: headerFragment"></script>
   </head>
   <body>
-    <div th:replace="~{fragments/heading :: heading(3)}"></div>
+    <div th:replace="~{fragments/navbar :: navbar(3)}"></div>
     <h2>Upload Statement File</h2>
     <div>
       <form method="POST" enctype="multipart/form-data" action="/mywebsite/finances/statements/upload">
         <table>
-          <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-          <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+          <tr><td>File to upload:</td><td><input type="file" name="file"></input></td></tr>
+          <tr><td></td><td><input type="submit" value="Upload"></input></td></tr>
         </table>
       </form>
     </div>

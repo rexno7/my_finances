@@ -1,7 +1,8 @@
-<ul id="heading" class="heading" th:fragment="heading(selected)">
-  <li><a href="#" class="home">MY FINANCES</a></li>
-  <li><a href="#" th:class="${selected == 1} ? 'selected'">OVERVIEW</a></li>
-  <li><a th:href="@{'/finances/transactions'}" th:class="${selected == 2} ? 'selected'">TRANSACTIONS</a></li>
-  <li><a th:href="@{'/finances/statements/upload'}" th:class="${selected == 3} ? 'selected'">UPLOAD</a></li>
-  <li><a href="#" th:class="${selected == 4} ? 'selected'">RULES</a></li>
-</ul>
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="headerFragment">
+		<title th:text="${pageTitle} ? ${pageTitle} : 'My Finances'"></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+	    <link rel="stylesheet" type="text/css" href="../static/css/finances.css" 
+	          th:href="@{/css/finances.css}"></link>
+	</th:block>
+</html>

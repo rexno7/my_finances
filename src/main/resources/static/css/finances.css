@@ -33,7 +33,11 @@ table td {
 	text-align: end;
 }
 
-.heading {
+.home {
+	padding: 0 1em;
+}
+
+.navbar {
 	display: flex;
 	flex-flow: row wrap;
 	list-style: none;
@@ -42,18 +46,14 @@ table td {
 	padding: 0;
 }
 
-.home {
-	padding: 0 1em;
-}
-
-.heading a {
+.navbar a {
 	text-decoration: none;
 	display: block;
 	padding: 1em;
 	color: white;
 }
 
-.heading a:hover {
+.navbar a:hover {
 	background: #333f95;
 }
 

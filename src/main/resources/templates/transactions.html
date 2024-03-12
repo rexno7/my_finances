@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>My Video Games</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../static/css/financials.css" 
-          th:href="@{/css/financials.css}" />
+    <script th:replace="fragments/heading :: headerFragment"></script>
   </head>
   <body>
-    <div th:replace="~{fragments/heading :: heading(2)}"></div>
+    <div th:replace="~{fragments/navbar :: navbar(2)}"></div>
     <div id="txn-search">
       <form th:action="@{/finances/transactions}" id="searchForm">
         <div>

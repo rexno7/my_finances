@@ -18,14 +18,14 @@ public class StatementController {
   private StatementService statementService;
 
   @GetMapping("/upload")
-  public String uploadFile(Model model) {
+  public String displayUploadFilePage(Model model) {
     return "upload-statement";
   }
 
   @PostMapping("/upload")
-  public String handleFileUpload(@RequestParam("file") MultipartFile file,
+  public String upload(@RequestParam("file") MultipartFile file,
       RedirectAttributes redirectAttributes) throws Exception {
-    statementService.uploadStatementFile(file);
+    statementService.upload(file);
     return "redirect:/finances/statements/upload";
   }
 }

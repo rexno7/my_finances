@@ -1,5 +1,6 @@
 package mywebsite.finances.statement.parser;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import mywebsite.finances.account.Account;
 import mywebsite.finances.account.AccountRepository;
@@ -33,22 +35,24 @@ public class BoACheckingStatementParser implements StatementParser {
   private final String SINGLE_LINE_TRANSACTION = ".*\\d+\\.\\d{2}";
   private final String TRANSACTION_INDICATOR = "\\d{2}/\\d{2}/\\d{2}.*";
 
-  public static final String TYPE = "BoAChecking";
-
   @Autowired
   private AccountRepository accountRepository;
 
-  public String getType() {
-    return TYPE;
-  }
-
-  public static boolean canParse(String statementString) {
+  @Override
+  public boolean canParse(MultipartFile file) {
+    String statementString;
+    try {
+      statementString = StatementParser.convertFileToString(file);
+    } catch (IOException e) {
+      // TODO: log error
+      return false;
+    }
     Matcher matcher = STATEMENT_VALIDATION_REGEX.matcher(statementString);
     return matcher.find();
   }
 
-  public List<Transaction> parse(String[] statementLines)
-      throws NumberFormatException, ParseException {
+  public List<Transaction> parse(MultipartFile file) throws Exception {
+    String[] statementLines = StatementParser.convertFileToString(file).split(System.lineSeparator());
     List<Transaction> transactions = new ArrayList<Transaction>();
     List<String> statementLinesList = Arrays.asList(statementLines);
     Iterator<String> statementIterator = statementLinesList.iterator();

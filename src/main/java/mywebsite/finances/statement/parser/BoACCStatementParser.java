@@ -1,5 +1,6 @@
 package mywebsite.finances.statement.parser;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import mywebsite.finances.account.Account;
 import mywebsite.finances.account.AccountRepository;
@@ -35,12 +37,21 @@ public class BoACCStatementParser implements StatementParser {
     return TYPE;
   }
 
-  public static boolean canParse(String statementString) {
+  @Override
+  public boolean canParse(MultipartFile file) {
+    String statementString;
+    try {
+      statementString = StatementParser.convertFileToString(file);
+    } catch (IOException e) {
+      return false;
+    }
     Matcher matcher = STATEMENT_VALIDATION_REGEX.matcher(statementString);
     return matcher.find();
   }
 
-  public List<Transaction> parse(String[] statementLines) throws Exception {
+  @Override
+  public List<Transaction> parse(MultipartFile file) throws Exception {
+    String[] statementLines = StatementParser.convertFileToString(file).split(System.lineSeparator());
     String statementPeriod = null;
     Account account = null;
     List<Transaction> transactions = new ArrayList<Transaction>();

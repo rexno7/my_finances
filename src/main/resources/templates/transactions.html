@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <script th:replace="fragments/heading :: headerFragment"></script>
+    <script th:replace="~{fragments/heading :: headerFragment}"></script>
   </head>
   <body>
     <div th:replace="~{fragments/navbar :: navbar(2)}"></div>
@@ -16,35 +16,46 @@
         <button id="btnClear" type="submit">Clear</button>
       </form>
     </div>
-    <div th:switch="${transactionPage.size}">
+    <div id="transaction-table" th:switch="${transactionPage.size}">
       <p th:case="0">No transactions found</p>
-      <div th:case="*" class="txn-table">
-        <table>
-          <thead>
-            <tr>
-              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
-              <th>Posted</th>
-              <th th:replace="~{fragments/sorting :: sorting('account.accountNumber', 'Account')}"></th>
-              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}" class="grow"></th>
-              <th th:replace="~{fragments/sorting :: sorting('amount', 'Amount')}"></th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="transaction : ${transactionPage.content}">
-              <td th:text="${#dates.format(transaction.transactionDate, 'MM/dd')}"></td>
-              <td th:text="${#dates.format(transaction.postingDate, 'MM/dd')}"></td>
-              <td th:text="${transaction.account.accountNumber}"></td>
-              <td th:text="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" class="grow"></td>
-              <td class="number" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
-              <td th:text="${transaction.category}"></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="pagination">
-          <div th:if="${transactionPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-            <a th:href="@{/finances/transactions(size=${transactionPage.size}, page=${pageNumber})}" th:text=${pageNumber}></a>
-          </div>
+      <div th:case="*" id="transaction-data">
+      	<div id="account-sidebar">
+      	  <span>Accounts</span>
+      	  <div id="account-sidebar-list">
+      	    <form id="accountForm" th:action="@{/finances/transactions}"> 
+      	      <div th:each="account : ${accounts}">
+      	        <input type="checkbox" th:checked="${accountsFiltered.contains(account)}"></input>
+      	        <div th:text="${account.accountNumber}"></div>
+      	      </div>
+      	    </form>
+      	  </div>
+      	</div>
+      	<div>
+	        <table>
+	          <thead>
+	            <tr>
+	              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
+	              <th th:replace="~{fragments/sorting :: sorting('account.accountNumber', 'Account')}"></th>
+	              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}" class="grow"></th>
+	              <th th:replace="~{fragments/sorting :: sorting('amount', 'Amount')}"></th>
+	              <th>Category</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <tr th:each="transaction : ${transactionPage.content}">
+	              <td th:text="${#dates.format(transaction.transactionDate, 'MM/dd')}"></td>
+	              <td th:text="${transaction.account.accountNumber}"></td>
+	              <td th:text="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" class="grow"></td>
+	              <td class="number" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
+	              <td th:text="${transaction.category}"></td>
+	            </tr>
+	          </tbody>
+	        </table>
+	        <div class="pagination">
+	          <div th:if="${transactionPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+	            <a th:href="@{/finances/transactions(size=${transactionPage.size}, page=${pageNumber})}" th:text=${pageNumber}></a>
+	          </div>
+	        </div>
         </div>
       </div>
     </div>

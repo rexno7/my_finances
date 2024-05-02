@@ -84,3 +84,41 @@ table td {
 	justify-content: center;
 	gap: 1em;
 }
+
+#transaction-table {
+	margin-right: 0.5em;
+}
+
+#transaction-data {
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#account-sidebar {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 15em;
+	margin: 0 .5em;
+}
+
+#account-sidebar span {
+	text-align: center;
+	color: white;
+	background: #3c9bbb;
+	padding: .5em;
+}
+
+#account-sidebar div {
+	display: flex;
+	flex-flow: flex-start;
+	gap: .5em;
+	align-items: center;
+}
+
+#account-sidebar-list {
+	margin: 0 0.5em;
+}
+
+#account-sidebar-list div {
+	margin-top: 0.25em;
+}

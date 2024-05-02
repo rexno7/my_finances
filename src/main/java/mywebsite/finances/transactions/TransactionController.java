@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import mywebsite.finances.account.Account;
+import mywebsite.finances.account.AccountRepository;
+
 @Controller
 @RequestMapping({ "/finances", "/finances/" })
 public class TransactionController {
@@ -27,14 +30,12 @@ public class TransactionController {
   @Autowired
   private TransactionRepository transactionRepository;
 
-//  @GetMapping("/transactions")
-//  public String getTransactions(Model model) {
-//    model.addAttribute("transactions", transactionService.list());
-//    return "transactions";
-//  }
+  @Autowired
+  private AccountRepository accountRepository;
 
   @GetMapping("/transactions")
   public String listTransactions(Model model, @RequestParam(required = false) String keyword,
+      @RequestParam(required = false) List<String> accountFilter,
       @RequestParam(defaultValue = "transactionDate,desc") String[] sort,
       @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "50") int size) {
     String sortField = sort[0];
@@ -42,17 +43,26 @@ public class TransactionController {
 
     Direction direction = sortDirection.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
     Order order = new Order(direction, sortField);
-
     Pageable pageable = PageRequest.of(page - 1, size, Sort.by(order));
 
+    List<Account> accounts = accountRepository.findAll();
+    List<Account> accountsFiltered = accounts;
+    if (accountFilter != null) {
+      accountsFiltered = accounts.stream()
+          .filter(account -> accountFilter.contains(account.getAccountNumber())).toList();
+    }
+    model.addAttribute("accounts", accounts);
+    model.addAttribute("accountsFiltered", accountsFiltered);
+
     Page<Transaction> transactionPage;
-    if (keyword == null) {
+    if (keyword == null && accountFilter == null) {
       transactionPage = transactionRepository.findAll(pageable);
+    } else if (accountFilter != null) {
+      transactionPage = transactionRepository.findByAccountIn(accountsFiltered, pageable);
     } else {
       transactionPage = transactionRepository.findByMerchantContainingIgnoreCase(keyword, pageable);
       model.addAttribute("keyword", keyword);
     }
-
     model.addAttribute("transactionPage", transactionPage);
 
     int totalPages = transactionPage.getTotalPages();

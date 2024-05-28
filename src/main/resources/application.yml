@@ -2,13 +2,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    username: joe
-    password: "000000"
-    url: jdbc:postgresql://localhost:5432/mywebsite
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    url: jdbc:h2:${DB_URL}
+    driverClassName: org.h2.Driver
+  h2:
+    console.enabled: true
   thymeleaf:
     cache: false
     mode: HTML

@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import mywebsite.finances.account.Account;
+import mywebsite.finances.account.AccountBalance;
 import mywebsite.finances.account.AccountRepository;
+import mywebsite.finances.account.AccountBalanceRepository;
 import mywebsite.finances.transactions.Category;
 import mywebsite.finances.transactions.Transaction;
 
@@ -37,6 +39,9 @@ public class BoACheckingStatementParser implements StatementParser {
 
   @Autowired
   private AccountRepository accountRepository;
+
+  @Autowired
+  private AccountBalanceRepository accountBalanceRepository;
 
   @Override
   public boolean canParse(MultipartFile file) {
@@ -73,7 +78,8 @@ public class BoACheckingStatementParser implements StatementParser {
         if (matcher.find()) {
           statementDate = (new SimpleDateFormat("MMMM dd, yyyy")).parse(matcher.group(1));
           statementEndValue = Double.parseDouble(matcher.group(2).replace(",", ""));
-          account.addToAccountValueHistory(statementDate, statementEndValue);
+          AccountBalance accountValue = new AccountBalance(account, statementDate, statementEndValue);
+          accountBalanceRepository.save(accountValue);
           accountRepository.save(account);
         }
       } else if (line.matches(DEPOSITS_HEADER)) {

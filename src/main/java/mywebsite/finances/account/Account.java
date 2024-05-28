@@ -1,18 +1,18 @@
 package mywebsite.finances.account;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+// import java.util.Date;
+// import java.util.HashMap;
+// import java.util.Map;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
+// import jakarta.persistence.CollectionTable;
+// import jakarta.persistence.Column;
+// import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapKeyColumn;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.MapKeyColumn;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -31,12 +31,12 @@ public class Account {
   @NotBlank(message = "name is required")
   private String name;
 
-  @ElementCollection
-  @CollectionTable(name = "account_value_history", joinColumns = {
-      @JoinColumn(name = "account_id", referencedColumnName = "id") })
-  @MapKeyColumn(name = "snapshot_date")
-  @Column(name = "value")
-  private Map<Date, Double> accountValueHistory;
+  // @ElementCollection
+  // @CollectionTable(name = "account_value_history", joinColumns = {
+  //     @JoinColumn(name = "account_id", referencedColumnName = "id") })
+  // @MapKeyColumn(name = "snapshot_date")
+  // @Column(name = "value")
+  // private Map<Date, Double> accountValueHistory;
 
   public Account() {
 
@@ -46,7 +46,7 @@ public class Account {
     this.accountNumber = accountNumber;
     this.institution = institution;
     this.name = name;
-    accountValueHistory = new HashMap<Date, Double>();
+    // accountValueHistory = new HashMap<Date, Double>();
   }
 
   public Long getId() {
@@ -81,21 +81,21 @@ public class Account {
     this.name = name;
   }
 
-  public Map<Date, Double> getAccountValueHistory() {
-    return accountValueHistory;
-  }
+  // public Map<Date, Double> getAccountValueHistory() {
+  //   return accountValueHistory;
+  // }
 
-  public void setAccountValueHistory(Map<Date, Double> accountValueHistory) {
-    this.accountValueHistory = accountValueHistory;
-  }
+  // public void setAccountValueHistory(Map<Date, Double> accountValueHistory) {
+  //   this.accountValueHistory = accountValueHistory;
+  // }
 
-  public Double addToAccountValueHistory(Date date, Double value) {
-    return this.accountValueHistory.put(date, value);
-  }
+  // public Double addToAccountValueHistory(Date date, Double value) {
+  //   return this.accountValueHistory.put(date, value);
+  // }
 
   @Override
   public String toString() {
     return "Account [id=" + id + ", accountNumber=" + accountNumber + ", institution=" + institution
-        + ", name=" + name + ", accountValueHistory=" + accountValueHistory + "]";
+        + ", name=" + name + "]";
   }
 }

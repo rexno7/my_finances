@@ -19,7 +19,7 @@ import mywebsite.finances.transactions.Transaction;
 
 @Service
 public class BoACCStatementParser implements StatementParser {
-  private final static Pattern STATEMENT_VALIDATION_REGEX = Pattern
+  private final Pattern STATEMENT_VALIDATION_REGEX = Pattern
       .compile("www.bankofamerica.com.*Visa Signature", Pattern.DOTALL);
   private final Pattern TRANSACTION_REGEX = Pattern.compile(
       "(\\d{2}\\/\\d{2})\\s+(\\d{2}\\/\\d{2})\\s+(.*?)\\s?(\\d{4})?\\s?(\\d{4})?\\s+([0-9,.-]+)$");
@@ -28,14 +28,8 @@ public class BoACCStatementParser implements StatementParser {
 
   private final Pattern ACCOUNT_PATTERN = Pattern.compile("Account# \\d{4} \\d{4} \\d{4} (\\d{4})");
 
-  public static final String TYPE = "BoACC";
-
   @Autowired
   private AccountRepository accountRepository;
-
-  public String getType() {
-    return TYPE;
-  }
 
   @Override
   public boolean canParse(MultipartFile file) {

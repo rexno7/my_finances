@@ -3,4 +3,4 @@
 .classpath
 .vscode
 .settings
-*.mv.db
+*.db

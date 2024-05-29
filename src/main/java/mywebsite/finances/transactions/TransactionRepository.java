@@ -1,5 +1,6 @@
 package mywebsite.finances.transactions;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +13,8 @@ import mywebsite.finances.account.Account;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
   List<Transaction> findAll(Sort sort);
+
+  List<Transaction> findByTransactionDateBetween(Date startDate, Date endDate);
 
   Page<Transaction> findByMerchantContainingIgnoreCase(String keyword, Pageable pageable);
 

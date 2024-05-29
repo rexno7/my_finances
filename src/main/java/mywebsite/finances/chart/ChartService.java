@@ -46,7 +46,6 @@ public class ChartService {
                 txn.getAmount(),
                 txn.getCategory().toString(),
                 txn.getTransactionDate()))
-                .sorted(Comparator.comparing(TransactionDTO::getAmount).reversed())
                 .toList();
     }
 

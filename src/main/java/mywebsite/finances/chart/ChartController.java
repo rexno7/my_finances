@@ -1,6 +1,7 @@
 package mywebsite.finances.chart;
 
 import java.text.ParseException;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ public class ChartController {
         try {
             List<Transaction> lastMonthsTransactions = chartService.getCurrentMonthTransactions();
             List<TransactionDTO> lastMonthsTransactionDTOs = ChartService
-                    .convertListToTransactionDTO(lastMonthsTransactions);
+                    .convertListToTransactionDTO(lastMonthsTransactions).stream()
+                    .filter(txn -> txn.getAmount() > 0)
+                    .sorted(Comparator.comparing(TransactionDTO::getAmount))
+                    .toList();
             model.addAttribute("transactions", lastMonthsTransactionDTOs);
         } catch (ParseException e) {
             System.err.println(e.getMessage());

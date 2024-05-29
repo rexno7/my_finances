@@ -1,15 +1,13 @@
 package mywebsite.finances.chart;
 
 import java.text.ParseException;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import mywebsite.finances.transactions.Transaction;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -19,16 +17,16 @@ public class ChartController {
     @Autowired
     private ChartService chartService;
 
-    @GetMapping("/thisMonth")
-    public String getChartForThisMonth(Model model) {
+    @GetMapping("/month")
+    public String getChartForGivenYearMonth(Model model, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month) {
         try {
-            List<Transaction> lastMonthsTransactions = chartService.getCurrentMonthTransactions();
-            List<TransactionDTO> lastMonthsTransactionDTOs = ChartService
-                    .convertListToTransactionDTO(lastMonthsTransactions).stream()
-                    .filter(txn -> txn.getAmount() > 0)
-                    .sorted(Comparator.comparing(TransactionDTO::getAmount))
-                    .toList();
-            model.addAttribute("transactions", lastMonthsTransactionDTOs);
+            List<TransactionDTO> transactions = null;
+            if (year == null || month == null) {
+                transactions = chartService.getCurrentMonthTransactions();
+            } else {
+                transactions = chartService.getMonthTransactions(year, month);
+            }
+            model.addAttribute("transactions", transactions);
         } catch (ParseException e) {
             System.err.println(e.getMessage());
         }

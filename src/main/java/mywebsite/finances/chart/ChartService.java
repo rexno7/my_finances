@@ -3,6 +3,7 @@ package mywebsite.finances.chart;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.Date;
@@ -20,26 +21,37 @@ public class ChartService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public List<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
+    public List<TransactionDTO> getAllTransactions() {
+        return convertListToTransactionDTO(transactionRepository.findAll());
     }
 
-    public List<Transaction> getCurrentMonthTransactions() throws ParseException {
+    public List<TransactionDTO> getCurrentMonthTransactions() throws ParseException {
         LocalDate currentDate = LocalDate.now();
-        int month = currentDate.getMonthValue();
-        int year = currentDate.getYear();
+        return getMonthTransactions(currentDate.getYear(), currentDate.getMonthValue());
+    }
+
+    public List<TransactionDTO> getLastMonthsTransactions() throws ParseException {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1L);
+        return getMonthTransactions(lastMonth.getYear(), lastMonth.getMonthValue());
+    }
+
+    public List<TransactionDTO> getMonthTransactions(int year, int month) throws ParseException {
+        int lastDayOfMonth = YearMonth.of(year, month).atEndOfMonth().getDayOfMonth();
         Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(month + "/01/" + year);
-        Date endDate = Date.from(currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        return transactionRepository.findByTransactionDateBetween(startDate, endDate);
+        Date endDate = new SimpleDateFormat("MM/dd/yyyy").parse(month + "/" +lastDayOfMonth + "/" + year);
+        return convertFilterAndSort(
+                transactionRepository.findByTransactionDateBetween(startDate, endDate));
     }
 
-    public List<Transaction> getLastMonthsTransactions() throws ParseException {
-        Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse("03/01/2024");
-        Date endDate = new SimpleDateFormat("MM/dd/yyyy").parse("07/01/2024");
-        return transactionRepository.findByTransactionDateBetween(startDate, endDate);
+    private List<TransactionDTO> convertFilterAndSort(List<Transaction> transactionList) {
+        return convertListToTransactionDTO(transactionList)
+                .stream()
+                .filter(txn -> txn.getAmount() > 0)
+                .sorted(Comparator.comparing(TransactionDTO::getAmount))
+                .toList();
     }
 
-    public static List<TransactionDTO> convertListToTransactionDTO(List<Transaction> transactionList) {
+    private List<TransactionDTO> convertListToTransactionDTO(List<Transaction> transactionList) {
         return transactionList.stream().map(txn -> new TransactionDTO(
                 txn.getAccount().getName(),
                 txn.getNickname() == null ? txn.getMerchant() : txn.getNickname(),
@@ -48,6 +60,4 @@ public class ChartService {
                 txn.getTransactionDate()))
                 .toList();
     }
-
 }
- 

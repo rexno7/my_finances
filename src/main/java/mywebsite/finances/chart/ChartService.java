@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +52,7 @@ public class ChartService {
 
     private List<TransactionDTO> convertListToTransactionDTO(List<Transaction> transactionList) {
         return transactionList.stream().map(txn -> new TransactionDTO(
+                txn.getId(),
                 txn.getAccount().getName(),
                 txn.getNickname() == null ? txn.getMerchant() : txn.getNickname(),
                 txn.getAmount(),

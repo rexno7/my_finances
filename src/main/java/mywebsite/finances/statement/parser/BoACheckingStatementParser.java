@@ -49,7 +49,7 @@ public class BoACheckingStatementParser implements StatementParser {
     try {
       statementString = StatementParser.convertFileToString(file);
     } catch (IOException e) {
-      // TODO: log error
+      System.err.println(e.getMessage());
       return false;
     }
     Matcher matcher = STATEMENT_VALIDATION_REGEX.matcher(statementString);

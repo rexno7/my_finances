@@ -11,11 +11,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import mywebsite.finances.chart.TransactionDTO;
+
 @Service
 public class TransactionService {
 
   @Autowired
   private TransactionRepository transactionRepository;
+
+  public Transaction save(Transaction transaction) {
+    return transactionRepository.save(transaction);
+  }
+
+  public TransactionDTO update(TransactionDTO transactionDTO) {
+    Transaction existingTransaction =
+        transactionRepository.findById(transactionDTO.getId()).get();
+    existingTransaction.setNickname(transactionDTO.getMerchant());
+    existingTransaction.setCategory(Category.valueOf(transactionDTO.getCategory()));
+    existingTransaction.setTransactionDate(transactionDTO.getTransactionDate());
+    transactionRepository.save(existingTransaction);
+    return transactionDTO;
+  }
 
   public List<Transaction> list() {
     List<Transaction> transactions = transactionRepository.findAll();
@@ -30,7 +46,7 @@ public class TransactionService {
     List<Transaction> list;
 
     List<Transaction> transactions = list();
-//    sortList(sortParams, transactions);
+    // sortList(sortParams, transactions);
     if (transactions.size() < startItem) {
       list = Collections.emptyList();
     } else {
@@ -45,39 +61,34 @@ public class TransactionService {
   }
 
   public void sortList(String sortParams, List<Transaction> list) {
-    String[] sortParamList = sortParams.split(",");
-    int modifier = 1;
-    if (sortParamList.length > 0
-        && "desc".equalsIgnoreCase(sortParamList[sortParamList.length - 1])) {
-      modifier = -1;
-    }
+    String[] sortParamList = sortParams.toLowerCase().split(",");
+
+    Comparator<Transaction> merchantComparator = Comparator.comparing(Transaction::getMerchant);
+    Comparator<Transaction> dateComparator = Comparator.comparing(Transaction::getTransactionDate);
+    Comparator<Transaction> amountComparator = Comparator.comparing(Transaction::getAmount);
+    Comparator<Transaction> accountComparator = (Transaction a, Transaction b) -> a.getAccount().getAccountNumber()
+        .compareTo(b.getAccount().getAccountNumber());
+
+    Comparator<Transaction> chain = null;
     for (String sortName : sortParamList) {
-      switch (sortName) {
-        case ("merchant"): {
-          list.sort((t1, t2) -> t1.getMerchant().compareTo(t2.getMerchant()));
-          list.stream().sorted(new Comparator<Transaction>() {
-            @Override
-            public int compare(Transaction t1, Transaction t2) {
-              return t1.getMerchant().compareTo(t2.getMerchant());
-            }
-          });
-          break;
-        }
-        case ("date"): {
-          list.sort((t1, t2) -> t1.getTransactionDate().compareTo(t2.getTransactionDate()));
-          break;
-        }
-        case ("acctNo"): {
-          list.sort(
-              (t1, t2) -> t1.getAccount().getAccountNumber()
-                  .compareTo(t2.getAccount().getAccountNumber()));
-          break;
-        }
-        case ("amount"): {
-          list.sort((t1, t2) -> (int) (t1.getAmount() - t2.getAmount()));
-          break;
-        }
+      if ("merchant".equals(sortName)) {
+        chain = chainComparator(chain, merchantComparator);
+      } else if ("date".equals(sortName)) {
+        chain = chainComparator(chain, dateComparator);
+      } else if ("acctNo".equals(sortName)) {
+        chain = chainComparator(chain, accountComparator);
+      } else if ("amount".equals(sortName)) {
+        chain = chainComparator(chain, amountComparator);
       }
     }
+    list.sort(chain);
+  }
+
+  private Comparator<Transaction> chainComparator(Comparator<Transaction> chain,
+      Comparator<Transaction> additionalComparator) {
+    if (chain == null) {
+      return additionalComparator;
+    }
+    return chain.thenComparing(additionalComparator);
   }
 }

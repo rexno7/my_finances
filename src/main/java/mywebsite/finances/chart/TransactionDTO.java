@@ -3,18 +3,29 @@ package mywebsite.finances.chart;
 import java.util.Date;
 
 public class TransactionDTO {
+    private Long id;
     private String accountName;
     private String merchant;
     private float amount;
     private String category;
     private Date transactionDate;
 
-    public TransactionDTO(String accountName, String merchant, float amount, String category, Date transactionDate) {
+    public TransactionDTO(Long id, String accountName, String merchant, float amount,
+            String category, Date transactionDate) {
+        this.id = id;
         this.accountName = accountName;
         this.merchant = merchant;
         this.amount = amount;
         this.category = category;
         this.transactionDate = transactionDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAccountName() {

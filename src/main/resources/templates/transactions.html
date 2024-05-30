@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
     <script th:replace="~{fragments/heading :: headerFragment}"></script>
+	<!-- <script type="text/javascript" th:src="@{/js/transaction.js}"></script> -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
     <div th:replace="~{fragments/navbar :: navbar(2)}"></div>
@@ -31,7 +33,7 @@
       	  </div>
       	</div>
       	<div>
-	        <table>
+	        <table id="transaction-table">
 	          <thead>
 	            <tr>
 	              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
@@ -43,11 +45,11 @@
 	          </thead>
 	          <tbody>
 	            <tr th:each="transaction : ${transactionPage.content}">
-	              <td th:text="${#dates.format(transaction.transactionDate, 'MM/dd')}"></td>
+	              <td><input th:value="${#dates.format(transaction.transactionDate, 'MM/dd')}" th:data-id=${transaction.id} data-field="date" class="editable"></td>
 	              <td th:text="${transaction.account.accountNumber}"></td>
-	              <td th:text="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" class="grow"></td>
-	              <td class="number" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
-	              <td th:text="${transaction.category}"></td>
+	              <td><input th:value="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" th:data-id=${transaction.id} data-field="nickname" class="grow editable"></td>
+	              <td><input th:value="${#numbers.formatCurrency(transaction.amount)}" th:data-id=${transaction.id} data-field="amount" class="number editable"></td>
+	              <td><input th:value="${transaction.category}" th:data-id=${transaction.id} data-field="category" class="editable"></td>
 	            </tr>
 	          </tbody>
 	        </table>
@@ -59,5 +61,31 @@
         </div>
       </div>
     </div>
+	<script>
+		$(document).ready(function() {
+			$(".editable").on("blur", function() {
+				var id = $(this).data("id");
+				var field = $(this).data("field");
+				var value = $(this).val().replaceAll('$', '');
+
+				$.ajax({
+					url: '/mywebsite/finances/transaction/update',
+					method: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						id: id,
+						field: field,
+						value: value
+					}),
+					success: function(response) {
+						console.log("Update successful");
+					},
+					error: function(xhr, status, error) {
+						console.log("Update failed: " + error);
+					}
+				});
+			});
+		});
+	</script>
   </body>
 </html>

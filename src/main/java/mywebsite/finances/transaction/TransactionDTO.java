@@ -1,4 +1,4 @@
-package mywebsite.finances.chart;
+package mywebsite.finances.transaction;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package mywebsite.finances.transactions;
+package mywebsite.finances.transaction;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

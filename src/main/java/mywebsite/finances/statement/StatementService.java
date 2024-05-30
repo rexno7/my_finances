@@ -6,10 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import mywebsite.finances.statement.parser.StatementParser;
-import mywebsite.finances.statement.parser.StatementParserFactory;
-import mywebsite.finances.transactions.Transaction;
-import mywebsite.finances.transactions.TransactionRepository;
+import mywebsite.finances.transaction.Transaction;
+import mywebsite.finances.transaction.TransactionRepository;
 
 @Service
 public class StatementService {

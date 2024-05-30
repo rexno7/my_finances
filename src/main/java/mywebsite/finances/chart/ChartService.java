@@ -11,8 +11,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import mywebsite.finances.transactions.Transaction;
-import mywebsite.finances.transactions.TransactionRepository;
+import mywebsite.finances.transaction.Transaction;
+import mywebsite.finances.transaction.TransactionDTO;
+import mywebsite.finances.transaction.TransactionRepository;
 
 @Service
 public class ChartService {

@@ -21,7 +21,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <form action="#" th:action="@{/finances/rules}" th:object="${newRule}" method="post">
+                        <form action="#" th:action="@{/rules}" th:object="${newRule}" method="post">
                             <td><input type="text" th:field="*{ruleRegex}"></td>
                             <td><input type="text" th:field="*{executionString}"></td>
                             <td>

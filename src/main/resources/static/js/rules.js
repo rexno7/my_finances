@@ -3,7 +3,7 @@ $(document).ready(function() {
         var id = $(this).data("id");
 
         $.ajax({
-            url: `/mywebsite/finances/rule/${id}`,
+            url: `/myfinances/rule/${id}`,
             method: 'DELETE',
             contentType: 'appliction/json',
             success: function(response) {

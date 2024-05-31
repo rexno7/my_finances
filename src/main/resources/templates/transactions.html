@@ -8,13 +8,13 @@
   <body>
     <div th:replace="~{fragments/navbar :: navbar(2)}"></div>
     <div id="txn-search">
-      <form th:action="@{/finances/transactions}" id="searchForm">
+      <form th:action="@{/transactions}" id="searchForm">
         <div>
           <input id="keyword" type="search" name="keyword" th:value="${keyword}" required placeholder="Enter keyword" />
           <button type="submit">Search</button>
         </div>
       </form>
-      <form th:action="@{/finances/transactions}" id="clearForm">
+      <form th:action="@{/transactions}" id="clearForm">
         <button id="btnClear" type="submit">Clear</button>
       </form>
     </div>
@@ -24,7 +24,7 @@
       	<div id="account-sidebar">
       	  <span>Accounts</span>
       	  <div id="account-sidebar-list">
-      	    <form id="accountForm" th:action="@{/finances/transactions}"> 
+      	    <form id="accountForm" th:action="@{/transactions}"> 
       	      <div th:each="account : ${accounts}">
       	        <input type="checkbox" th:checked="${accountsFiltered.contains(account)}"></input>
       	        <div th:text="${account.accountNumber}"></div>
@@ -63,7 +63,7 @@
 	        </table>
 	        <div class="pagination">
 	          <div th:if="${transactionPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-	            <a th:href="@{/finances/transactions(size=${transactionPage.size}, page=${pageNumber})}" th:text=${pageNumber}></a>
+	            <a th:href="@{/transactions(size=${transactionPage.size}, page=${pageNumber})}" th:text=${pageNumber}></a>
 	          </div>
 	        </div>
         </div>
@@ -77,7 +77,7 @@
 				var value = $(this).val().replaceAll('$', '');
 
 				$.ajax({
-					url: '/mywebsite/finances/transaction/update',
+					url: '/myfinances/transaction/update',
 					method: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify({
@@ -99,7 +99,7 @@
 				var value = $(this).val();
 
 				$.ajax({
-					url: '/mywebsite/finances/transaction/update',
+					url: '/myfinances/transaction/update',
 					method: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify({

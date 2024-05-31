@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-  	<script th:replace="fragments/heading :: headerFragment"></script>
+  	<script th:replace="~{fragments/heading :: headerFragment}"></script>
   </head>
   <body>
     <div th:replace="~{fragments/navbar :: navbar(4)}"></div>
     <h2>Upload Statement File</h2>
     <div>
-      <form method="POST" enctype="multipart/form-data" action="/mywebsite/finances/statements/upload">
+      <form method="POST" enctype="multipart/form-data" action="/myfinances/statements/upload">
         <table>
           <tr><td>File to upload:</td><td><input type="file" name="file"></input></td></tr>
           <tr><td></td><td><input type="submit" value="Upload"></input></td></tr>

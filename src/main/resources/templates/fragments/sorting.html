@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<th scope="col" th:fragment="sorting(field, label)">
-	  <a th:href="@{'/finances/transactions?' + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
+	  <a th:href="@{'/transactions?' + ${keyword!=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
 	              + 'page=' + ${currentPage} + '&size=' + ${pageSize} 
 	              + ${sortField!=null ? '&sort=' + field + ',' + (sortField == field ? reverseSortDirection : sortDirection) : '' }}">
 	              [[${label}]]</a>

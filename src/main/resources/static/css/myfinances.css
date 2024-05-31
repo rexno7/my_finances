@@ -1,0 +1,133 @@
+body {
+	margin: 0;
+}
+
+table {
+	border-spacing: 0px 0px;
+}
+
+thead {
+	background: #3c9bbb;
+	color: white;
+}
+
+thead a {
+	text-decoration: none;
+	color: white;
+}
+
+th {
+	padding: .5em;
+	text-align: center;
+	flex-grow: 0;
+	font-weight: normal;
+}
+
+table td {
+	padding: .25em 1em;
+	flex-grow: 0;
+	text-align: center;
+}
+
+.number {
+	text-align: end;
+}
+
+.home {
+	padding: 0 1em;
+}
+
+.navbar {
+	display: flex;
+	flex-flow: row wrap;
+	list-style: none;
+	margin: 0;
+	background: #3c9bbb;
+	padding: 0;
+}
+
+.navbar a {
+	text-decoration: none;
+	display: block;
+	padding: 1em;
+	color: white;
+}
+
+.navbar a:hover {
+	background: #333f95;
+}
+
+.selected {
+	background: #2b6a2b;
+}
+
+#txn-search {
+	display: flex;
+	gap: .25em;
+	padding: 1em .5em;
+}
+
+.txn-table {
+	display: flex;
+	flex-direction: column;
+	width: auto;
+}
+
+.grow {
+	flex-grow: 1;
+	text-align: start;
+}
+
+.pagination {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	gap: 1em;
+}
+
+#transaction-table {
+	margin-right: 0.5em;
+}
+
+#transaction-data {
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+#account-sidebar {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 15em;
+	margin: 0 .5em;
+}
+
+#account-sidebar span {
+	text-align: center;
+	color: white;
+	background: #3c9bbb;
+	padding: .5em;
+}
+
+#account-sidebar div {
+	display: flex;
+	flex-flow: flex-start;
+	gap: .5em;
+	align-items: center;
+}
+
+#account-sidebar-list {
+	margin: 0 0.5em;
+}
+
+#account-sidebar-list div {
+	margin-top: 0.25em;
+}
+
+.delete-button {
+	color: red;
+	font-weight: 700;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0px;
+}

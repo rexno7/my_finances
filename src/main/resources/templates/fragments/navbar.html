@@ -2,9 +2,9 @@
 	<ul id="navbar" class="navbar" th:fragment="navbar(selected)">
 	  <li><a href="#" class="home">MY FINANCES</a></li>
 	  <li><a href="#" th:class="${selected == 1} ? 'selected'">OVERVIEW</a></li>
-	  <li><a th:href="@{'/finances/transactions'}" th:class="${selected == 2} ? 'selected'">TRANSACTIONS</a></li>
+	  <li><a th:href="@{'/transactions'}" th:class="${selected == 2} ? 'selected'">TRANSACTIONS</a></li>
 	  <li><a th:href="@{'/charts/merchants'}" th:class="${selected == 3} ? 'selected'">CHART</a></li>
-	  <li><a th:href="@{'/finances/statements/upload'}" th:class="${selected == 4} ? 'selected'">UPLOAD</a></li>
-	  <li><a th:href="@{'/finances/rules'}" th:class="${selected == 5} ? 'selected'">RULES</a></li>
+	  <li><a th:href="@{'/statements/upload'}" th:class="${selected == 4} ? 'selected'">UPLOAD</a></li>
+	  <li><a th:href="@{'/rules'}" th:class="${selected == 5} ? 'selected'">RULES</a></li>
 	</ul>
 </html>

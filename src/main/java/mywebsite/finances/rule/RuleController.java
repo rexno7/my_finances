@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import jakarta.validation.Valid;
+import mywebsite.finances.transaction.Category;
 
 @Controller
 public class RuleController {
@@ -20,13 +21,18 @@ public class RuleController {
     @Autowired
     private RuleService ruleService;
 
+    @ModelAttribute("allCategories")
+    public List<Category> populateCategories() {
+        return Arrays.asList(Category.values());
+    }
+
     @ModelAttribute("allTransactionFields")
-    public List<String> populateCategories() {
+    public List<String> populateTransactions() {
         return Arrays.asList("", "Merchant", "Category");
     }
 
     @ModelAttribute("rules")
-    public List<Rule> populateTransactions() {
+    public List<Rule> populateRules() {
         return ruleService.findAll();
     }
 

@@ -17,4 +17,8 @@ public class RuleService {
     public Rule saveNewRule(Rule rule) {
         return ruleRepository.save(rule);
     }
+
+    public void deleteRule(Long id) {
+        ruleRepository.deleteById(id);
+    }
 }

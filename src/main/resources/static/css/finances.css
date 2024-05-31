@@ -122,3 +122,12 @@ table td {
 #account-sidebar-list div {
 	margin-top: 0.25em;
 }
+
+.delete-button {
+	color: red;
+	font-weight: 700;
+	border: 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0px;
+}

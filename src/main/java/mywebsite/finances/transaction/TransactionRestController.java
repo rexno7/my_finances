@@ -44,7 +44,6 @@ public class TransactionRestController {
                     break;
             }
             transactionRepository.save(transaction);
-            System.out.println(transaction.toString());
             return "Success";
         }
         return "Transaction not found";

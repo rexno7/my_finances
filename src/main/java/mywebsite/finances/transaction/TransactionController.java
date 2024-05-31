@@ -1,5 +1,6 @@
 package mywebsite.finances.transaction;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,14 +26,19 @@ import mywebsite.finances.account.AccountService;
 @RequestMapping({ "/finances", "/finances/" })
 public class TransactionController {
 
-  @Autowired
-  private TransactionService transactionService;
+  // @Autowired
+  // private TransactionService transactionService;
 
   @Autowired
   private TransactionRepository transactionRepository;
 
   @Autowired
   private AccountService accountService;
+
+  @ModelAttribute("allCategories")
+  public List<Category> populateCategories() {
+      return Arrays.asList(Category.values());
+  }
 
   @GetMapping("/transactions")
   public String displayTransactions(Model model,

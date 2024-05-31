@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <script th:replace="~{fragments/heading :: headerFragment}"></script>
+    </head>
+    <body>
+        <div th:replace="~{fragments/navbar :: navbar(5)}"></div>
+        <div>
+            <h1>Add New Rule</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rule Regex</th>
+                        <th>Execution String</th>
+                        <th>Rule Run On</th>
+                        <th>Executed On</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <form action="#" th:action="@{/finances/rules}" th:object="${newRule}" method="post">
+                            <td><input type="text" th:field="*{ruleRegex}"></td>
+                            <td><input type="text" th:field="*{executionString}"></td>
+                            <td>
+                                <select th:field="*{ruleRunOn}">
+                                    <option th:each="transactionField : ${allTransactionFields}"
+                                            th:value="${transactionField}"
+                                            th:text="${transactionField}">Merchant</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select th:field="*{executedOn}">
+                                    <option th:each="transactionField : ${allTransactionFields}"
+                                            th:value="${transactionField}"
+                                            th:text="${transactionField}">Merchant</option>
+                                </select>
+                            </td>
+                            <td><input type="Submit" value="Add"></button></td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>Rules</h1>
+            <table id="rules-table">
+                <thead>
+                    <tr>
+                        <th>Rule Regex</th>
+                        <th>Execution String</th>
+                        <th>Rule Run On</th>
+                        <th>Executed On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rule : ${rules}">
+                        <td th:text="${rule.ruleRegex}"></td>
+                        <td th:text="${rule.executionString}"></td>
+                        <td th:text="${rule.ruleRunOn}"></td>
+                        <td th:text="${rule.executedOn}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

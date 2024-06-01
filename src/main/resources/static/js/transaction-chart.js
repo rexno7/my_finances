@@ -1,6 +1,8 @@
-function displayChart(transactions) {
+function displayDoughnutChart(transactions) {
     const merchants = Object.values(transactions).map((x) => x["merchant"]);
     const amounts = Object.values(transactions).map((x) => x["amount"]);
+    const totalSpent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+            .format(amounts.reduce((total, amount) => total + amount, 0));
 
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('transactionChart').getContext('2d');
@@ -37,12 +39,18 @@ function displayChart(transactions) {
                         position: 'right',
                     },
                     tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+                                        .format(context.parsed);
+                            }
+                        },
                         mode: 'point',
                         intersect: false,
                     },
                     title: {
                         display: true,
-                        text: 'Spending by Merchant'
+                        text: 'Total Spending for Month: ' + totalSpent,
                     }
                 }
             }

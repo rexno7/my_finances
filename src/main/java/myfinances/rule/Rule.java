@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import myfinances.transaction.Category;
+import myfinances.transaction.Transaction;
 
 @Entity
 public class Rule {
@@ -73,5 +75,23 @@ public class Rule {
 
     public void setExecutedOn(String executedOn) {
         this.executedOn = executedOn;
+    }
+
+    public void runOn(Transaction transaction) {
+        String transactionRunOnString = null;
+        if (ruleRunOn.equals("merchant")) {
+            transactionRunOnString = transaction.getMerchant();
+        } else if (ruleRunOn.equals("category")) {
+            transactionRunOnString = transaction.getCategory().name();
+        } else {
+            return;
+        }
+        if (transactionRunOnString.matches(ruleRegex)) {
+            if (executedOn.equals("merchant")) {
+                transaction.setNickname(executionString);
+            } else if (executedOn.equals("category")) {
+                transaction.setCategory(Category.valueOf(executionString));
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ public class RuleController {
 
     @ModelAttribute("allTransactionFields")
     public List<String> populateTransactions() {
-        return Arrays.asList("", "Merchant", "Category");
+        return Arrays.asList("", "merchant", "category");
     }
 
     @ModelAttribute("rules")

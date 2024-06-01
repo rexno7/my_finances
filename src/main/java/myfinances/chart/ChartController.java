@@ -22,12 +22,14 @@ public class ChartController {
     public String getChartOfMerchantsForGivenMonth(Model model, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month) {
         try {
             List<IChartEntry> entries = null;
-            if (year == null || month == null) {
-                LocalDate now = LocalDate.now();
-                entries = chartService.getMonthChartEntries(now.getYear(), now.getMonthValue());
-            } else {
-                entries = chartService.getMonthChartEntries(year, month);
+            LocalDate now = LocalDate.now();
+            if (year == null) {
+                year = now.getYear();
             }
+            if (month == null) {
+                month = now.getMonthValue();
+            }
+            entries = chartService.getMonthChartEntries(year, month);
             model.addAttribute("chartEntries", entries);
         } catch (ParseException e) {
             System.err.println(e.getMessage());

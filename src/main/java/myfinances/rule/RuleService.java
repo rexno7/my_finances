@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import myfinances.transaction.Transaction;
+
 @Service
 public class RuleService {
     
@@ -20,5 +22,13 @@ public class RuleService {
 
     public void deleteRule(Long id) {
         ruleRepository.deleteById(id);
+    }
+
+    public void executeRules(List<Transaction> transactions) {
+        for (Transaction transaction : transactions) {
+            for (Rule rule : this.findAll()) {
+                rule.runOn(transaction);
+            }
+        }
     }
 }

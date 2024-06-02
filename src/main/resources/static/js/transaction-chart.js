@@ -1,6 +1,6 @@
-function displayDoughnutChart(transactions) {
-    const merchants = Object.values(transactions).map((x) => x["merchant"]);
-    const amounts = Object.values(transactions).map((x) => x["amount"]);
+function displayDoughnutChart(chartEntries) {
+    const merchants = Object.values(chartEntries).map((x) => x["merchant"]);
+    const amounts = Object.values(chartEntries).map((x) => x["amount"]);
     const totalSpent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
             .format(amounts.reduce((total, amount) => total + amount, 0));
 
@@ -50,7 +50,7 @@ function displayDoughnutChart(transactions) {
                     },
                     title: {
                         display: true,
-                        text: 'Total Spending for Month: ' + totalSpent,
+                        text: 'Total Spending for Period: ' + totalSpent,
                     }
                 }
             }

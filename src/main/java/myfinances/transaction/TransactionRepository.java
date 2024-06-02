@@ -13,8 +13,6 @@ import myfinances.chart.IChartEntry;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-  List<Transaction> findByTransactionDateBetween(Date startDate, Date endDate);
-
   Page<Transaction> findByMerchantContainingIgnoreCase(String keyword, Pageable pageable);
 
   Page<Transaction> findByAccountIn(List<Account> accounts, Pageable pageable);
@@ -27,4 +25,22 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             ORDER BY amount
             """)
   List<IChartEntry> findAllBetweenDatesAndGroupByMerchant(Date startDate, Date endDate);
+
+  @Query("""
+            SELECT merchant AS merchant, category AS category, SUM(amount) AS amount
+            FROM Transaction
+            WHERE transactionDate < ?1
+            GROUP BY merchant, category
+            ORDER BY amount
+            """)
+  List<IChartEntry> findAllBeforeDateAndGroupByMerchant(Date endDate);
+
+  @Query("""
+            SELECT merchant AS merchant, category AS category, SUM(amount) AS amount
+            FROM Transaction
+            WHERE transactionDate >= ?1
+            GROUP BY merchant, category
+            ORDER BY amount
+            """)
+  List<IChartEntry> findAllAfterDateAndGroupByMerchant(Date start);
 }

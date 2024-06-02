@@ -1,7 +1,8 @@
 package myfinances.chart;
 
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,28 +13,44 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequestMapping("/charts")
+@RequestMapping("/chart")
 public class ChartController {
 
     @Autowired
     private ChartService chartService;
 
-    @GetMapping("/merchants")
-    public String getChartOfMerchantsForGivenMonth(Model model, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month) {
+    @GetMapping
+    public String getTimeFrame(Model model,
+            @RequestParam(required = false) String before,
+            @RequestParam(required = false) String after) {
+
+        Date startDate = null;
+        Date endDate = null;
         try {
-            List<IChartEntry> entries = null;
-            LocalDate now = LocalDate.now();
-            if (year == null) {
-                year = now.getYear();
+            if (after != null) {
+                startDate = chartService.StringToDate(after);
             }
-            if (month == null) {
-                month = now.getMonthValue();
+            if (before != null) {
+                endDate = chartService.StringToDate(before);
             }
-            entries = chartService.getMonthChartEntries(year, month);
-            model.addAttribute("chartEntries", entries);
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
+        } catch (NumberFormatException e) {
+            startDate = null;
+            endDate = null;
         }
-        return "merchants-chart-view";
+        if (startDate == null && endDate == null) {
+            startDate = Date.from(LocalDate.now().minusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            endDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+
+        List<IChartEntry> entries;
+        if (endDate == null) {
+            entries = chartService.getChartEntriesAfter(startDate);
+        } else if (startDate == null) {
+            entries = chartService.getChartEntriesBefore(endDate);
+        } else {
+            entries = chartService.getChartEntriesBetween(startDate, endDate);
+        }
+        model.addAttribute("chartEntries", entries);
+        return "transaction-chart";
     }
 }

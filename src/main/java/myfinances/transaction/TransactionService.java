@@ -8,6 +8,10 @@ public class TransactionService {
   // @Autowired
   // private TransactionRepository transactionRepository;
 
+  // public List<Transaction> getTransactionsBetween(LocalDate before, LocalDate after) {
+  //   return transactionRepository.findByTransactionDateBetween(before, after);
+  // }
+
   // public Transaction save(Transaction transaction) {
   //   return transactionRepository.save(transaction);
   // }

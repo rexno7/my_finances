@@ -1,5 +1,6 @@
 package myfinances.transaction;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -27,4 +28,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             ORDER BY amount
             """)
   List<IChartEntry> findAllBetweenDatesAndGroupByMerchant(Date startDate, Date endDate);
+
+  @Query("""
+            SELECT merchant AS merchant, category AS category, SUM(amount) AS amount
+            FROM Transaction
+            WHERE transactionDate BETWEEN ?1 AND ?2
+            GROUP BY merchant, category
+            ORDER BY amount
+            """)
+  List<IChartEntry> findAllBetweenDatesAndGroupByMerchant(LocalDate before, LocalDate after);
 }

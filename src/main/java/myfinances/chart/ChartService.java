@@ -27,4 +27,12 @@ public class ChartService {
                 .filter(entry -> entry.getAmount() > 0 && Category.TRANSFER != entry.getCategory())
                 .toList();
     }
+
+    // WHY DON'T YOU GET ME MY DATA!?!?!
+    public List<IChartEntry> getChartEntriesBetween(Date before, Date after) {
+        return transactionRepository.findAllBetweenDatesAndGroupByMerchant(before, after)
+                .stream()
+                .filter(entry -> entry.getAmount() > 0 && Category.TRANSFER != entry.getCategory())
+                .toList();
+    }
 }

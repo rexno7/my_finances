@@ -38,16 +38,16 @@
 	            <tr>
 	              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
 	              <th th:replace="~{fragments/sorting :: sorting('account.accountNumber', 'Account')}"></th>
-	              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}" class="grow"></th>
+	              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}"></th>
 	              <th th:replace="~{fragments/sorting :: sorting('amount', 'Amount')}"></th>
 	              <th>Category</th>
 	            </tr>
 	          </thead>
 	          <tbody>
 	            <tr th:each="transaction : ${transactionPage.content}">
-	              <td><input th:value="${#dates.format(transaction.transactionDate, 'MM/dd')}" th:data-id=${transaction.id} data-field="date" class="editable"></td>
+	              <td><input th:value="${#dates.format(transaction.transactionDate, 'MM/dd')}" th:data-id=${transaction.id} data-field="date" class="number editable"></td>
 	              <td th:text="${transaction.account.accountNumber}"></td>
-	              <td><input th:value="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" th:data-id=${transaction.id} data-field="nickname" class="grow editable"></td>
+	              <td><input th:value="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" th:data-id=${transaction.id} data-field="nickname" class="editable"></td>
 	              <td><input th:value="${#numbers.formatCurrency(transaction.amount)}" th:data-id=${transaction.id} data-field="amount" class="number editable"></td>
 	              <td>
 					<!-- <input th:value="${transaction.category}" th:data-id=${transaction.id} data-field="category" class="editable"> -->

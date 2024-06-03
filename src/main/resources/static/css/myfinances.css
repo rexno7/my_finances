@@ -67,17 +67,6 @@ table td {
 	padding: 1em .5em;
 }
 
-.txn-table {
-	display: flex;
-	flex-direction: column;
-	width: auto;
-}
-
-.grow {
-	flex-grow: 1;
-	text-align: start;
-}
-
 .pagination {
 	display: flex;
 	flex-flow: row wrap;
@@ -87,6 +76,18 @@ table td {
 
 #transaction-table {
 	margin-right: 0.5em;
+}
+
+#transaction-table td:first-child input {
+	width: 70px;
+}
+
+#transaction-table td:nth-child(3) input {
+	width: 400px;
+}
+
+#transaction-table td:nth-child(4) input {
+	width: 100px;
 }
 
 #transaction-data {

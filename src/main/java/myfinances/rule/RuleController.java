@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
-import myfinances.transaction.Category;
+import myfinances.category.Category;
+import myfinances.category.CategoryService;
 
 @Controller
 @RequestMapping(path = "/rules")
@@ -23,9 +24,12 @@ public class RuleController {
     @Autowired
     private RuleService ruleService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @ModelAttribute("allCategories")
     public List<Category> populateCategories() {
-        return Arrays.asList(Category.values());
+        return categoryService.findAll();
     }
 
     @ModelAttribute("allTransactionFields")
@@ -47,6 +51,7 @@ public class RuleController {
     @PostMapping()
     public String saveNewRule(@Valid final Rule newRule, final BindingResult bindingResult, final ModelMap model) {
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(System.out::println);
             model.addAttribute("newRule", newRule);
             return "rules";
         }

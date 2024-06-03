@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import myfinances.account.Account;
 import myfinances.account.AccountRepository;
 import myfinances.statement.StatementParser;
-import myfinances.transaction.Category;
 import myfinances.transaction.Transaction;
 
 @Service
@@ -74,7 +73,7 @@ public class BoACCStatementParser implements StatementParser {
           throw new Exception("Unknown account number: \"" + accountNum + "\"");
         }
         transactions.add(
-            new Transaction(line, account, amount, merchant, Category.UNDEFINED,
+            new Transaction(line, account, amount, merchant, null,
                 calcTransactionDate(statementPeriod, transactionDate),
                 calcTransactionDate(statementPeriod, postingDate), null, referenceNum));
       }

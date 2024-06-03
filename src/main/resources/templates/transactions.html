@@ -50,12 +50,12 @@
 	              <td><input th:value="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" th:data-id=${transaction.id} data-field="nickname" class="editable"></td>
 	              <td><input th:value="${#numbers.formatCurrency(transaction.amount)}" th:data-id=${transaction.id} data-field="amount" class="number editable"></td>
 	              <td>
-					<!-- <input th:value="${transaction.category}" th:data-id=${transaction.id} data-field="category" class="editable"> -->
 					<select class="editable-dropdown" th:data-id=${transaction.id} data-field="category">
+						<option value="">UNDEFINED</option>
 						<option th:each="category : ${allCategories}"
 								th:value="${category}"
-								th:text="${category}"
-								th:selected="${transaction.category} == ${category}">-</option>
+								th:text="${category.name}"
+								th:selected="${transaction.category} == ${category}"></option>
 					</select>
 				  </td>
 	            </tr>

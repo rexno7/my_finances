@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import myfinances.account.Account;
+import myfinances.category.Category;
 
 @Entity
 public class Transaction {
@@ -35,7 +36,8 @@ public class Transaction {
 
   private String nickname;
 
-  @NotNull(message = "category is required")
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "category_id")
   private Category category;
 
   private String label;

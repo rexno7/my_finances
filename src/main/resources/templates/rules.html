@@ -13,9 +13,9 @@
                 <thead>
                     <tr>
                         <th>Rule Regex</th>
-                        <th>Execution String</th>
-                        <th>Rule Run On</th>
-                        <th>Executed On</th>
+                        <th>Update Nickname</th>
+                        <th>Update Category</th>
+                        <th>Ignore Case?</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -23,21 +23,16 @@
                     <tr>
                         <form action="#" th:action="@{/rules}" th:object="${newRule}" method="post">
                             <td><input type="text" th:field="*{ruleRegex}"></td>
-                            <td><input type="text" th:field="*{executionString}"></td>
+                            <td><input type="text" th:field="*{updatedNickname}"></td>
                             <td>
-                                <select th:field="*{ruleRunOn}">
-                                    <option th:each="transactionField : ${allTransactionFields}"
-                                            th:value="${transactionField}"
-                                            th:text="${transactionField}">Merchant</option>
+                                <select th:field="*{updateToCategory}">
+                                    <option value=""></option>
+                                    <option th:each="category : ${allCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"></option>
                                 </select>
                             </td>
-                            <td>
-                                <select th:field="*{executedOn}">
-                                    <option th:each="transactionField : ${allTransactionFields}"
-                                            th:value="${transactionField}"
-                                            th:text="${transactionField}">Merchant</option>
-                                </select>
-                            </td>
+                            <td><input type="checkbox" th:field="*{ignoreCase}" th:value="${ignoreCase}"></td>
                             <td><input type="Submit" value="Add"></td>
                         </form>
                     </tr>
@@ -50,18 +45,18 @@
                 <thead>
                     <tr>
                         <th>Rule Regex</th>
-                        <th>Execution String</th>
-                        <th>Rule Run On</th>
-                        <th>Executed On</th>
+                        <th>Update Nickname</th>
+                        <th>Update Category</th>
+                        <th>Ignore Case</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="rule : ${rules}">
                         <td th:text="${rule.ruleRegex}"></td>
-                        <td th:text="${rule.executionString}"></td>
-                        <td th:text="${rule.ruleRunOn}"></td>
-                        <td th:text="${rule.executedOn}"></td>
+                        <td th:text="${rule.updatedNickname}"></td>
+                        <td th:text="${rule.updateToCategory != null ? rule.updateToCategory.name : null}"></td>
+                        <td th:text="${rule.ignoreCase}"></td>
                         <td>
                             <button class="delete-button" th:data-id="${rule.id}">Delete</button>
                         </td>

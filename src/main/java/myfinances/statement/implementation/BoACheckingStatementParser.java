@@ -20,7 +20,6 @@ import myfinances.account.AccountBalance;
 import myfinances.account.AccountBalanceRepository;
 import myfinances.account.AccountRepository;
 import myfinances.statement.StatementParser;
-import myfinances.transaction.Category;
 import myfinances.transaction.Transaction;
 
 @Service
@@ -115,7 +114,7 @@ public class BoACheckingStatementParser implements StatementParser {
         matcher.find();
         transactions.add(
             new Transaction(line, account, Float.parseFloat(matcher.group(3).replace(",", "")),
-                matcher.group(2), Category.UNDEFINED, SIMPLE_DATE_FORMATER.parse(matcher.group(1)),
+                matcher.group(2), null, SIMPLE_DATE_FORMATER.parse(matcher.group(1)),
                 null, null, null));
       }
     }

@@ -11,12 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import myfinances.category.CategoryService;
+
 @RestController
 @RequestMapping("/transaction")
 public class TransactionRestController {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    // @Autowired
+    // private CategoryHolder categoryHolder;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @PostMapping("/update")
     public String updateTransaction(@RequestBody UpdateRequest updateRequest) {
@@ -40,8 +48,7 @@ public class TransactionRestController {
                     transaction.setAmount(Float.parseFloat(updateRequest.getValue()));
                     break;
                 case "category":
-                    transaction.setCategory(
-                            Category.valueOf(updateRequest.getValue().toUpperCase()));
+                    transaction.setCategory(categoryService.findByName(updateRequest.getValue()));
                 default:
                     break;
             }

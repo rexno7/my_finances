@@ -1,11 +1,14 @@
 package myfinances.rule;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
-import myfinances.transaction.Category;
+import myfinances.category.Category;
 import myfinances.transaction.Transaction;
 
 @Entity
@@ -15,19 +18,16 @@ public class Rule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
-
     @NotBlank
     private String ruleRegex;
 
-    @NotBlank
-    private String executionString;
+    private String updatedNickname;
 
-    @NotBlank
-    private String ruleRunOn;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category updateToCategory;
 
-    @NotBlank
-    private String executedOn;
+    private boolean ignoreCase = true;
 
     public Long getId() {
         return id;
@@ -35,14 +35,6 @@ public class Rule {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getRuleRegex() {
@@ -53,44 +45,38 @@ public class Rule {
         this.ruleRegex = ruleRegex;
     }
 
-    public String getExecutionString() {
-        return executionString;
+    public String getUpdatedNickname() {
+        return updatedNickname;
     }
 
-    public void setExecutionString(String executionString) {
-        this.executionString = executionString;
+    public void setUpdatedNickname(String updatedNickname) {
+        this.updatedNickname = updatedNickname;
     }
 
-    public String getRuleRunOn() {
-        return ruleRunOn;
+    public Category getUpdateToCategory() {
+        return updateToCategory;
     }
 
-    public void setRuleRunOn(String ruleRunOn) {
-        this.ruleRunOn = ruleRunOn;
+    public void setUpdateToCategory(Category updateToCategory) {
+        this.updateToCategory = updateToCategory;
     }
 
-    public String getExecutedOn() {
-        return executedOn;
+    public boolean isIgnoreCase() {
+        return ignoreCase;
     }
 
-    public void setExecutedOn(String executedOn) {
-        this.executedOn = executedOn;
+    public void setIgnoreCase(boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
     }
 
     public void runOn(Transaction transaction) {
-        String transactionRunOnString = null;
-        if (ruleRunOn.equals("merchant")) {
-            transactionRunOnString = transaction.getMerchant();
-        } else if (ruleRunOn.equals("category")) {
-            transactionRunOnString = transaction.getCategory().name();
-        } else {
-            return;
-        }
-        if (transactionRunOnString.matches(ruleRegex)) {
-            if (executedOn.equals("merchant")) {
-                transaction.setNickname(executionString);
-            } else if (executedOn.equals("category")) {
-                transaction.setCategory(Category.valueOf(executionString));
+        String fullRegex = "(?i).*" + ruleRegex + ".*";
+        if (transaction.getMerchant().matches(fullRegex)) {
+            if (updatedNickname != null && !updatedNickname.isBlank()) {
+                transaction.setNickname(updatedNickname);
+            }
+            if (updateToCategory != null) {
+                transaction.setCategory(updateToCategory);
             }
         }
     }

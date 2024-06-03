@@ -1,6 +1,5 @@
 package myfinances.transaction;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import myfinances.account.Account;
 import myfinances.account.AccountService;
+import myfinances.category.Category;
+import myfinances.category.CategoryService;
 
 @Controller
 @RequestMapping("/transactions")
@@ -35,9 +36,12 @@ public class TransactionController {
   @Autowired
   private AccountService accountService;
 
+  @Autowired
+  private CategoryService categoryService;
+
   @ModelAttribute("allCategories")
   public List<Category> populateCategories() {
-      return Arrays.asList(Category.values());
+      return categoryService.findAll();
   }
 
   @GetMapping()

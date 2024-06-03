@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import myfinances.transaction.Category;
 import myfinances.transaction.Transaction;
 import myfinances.transaction.TransactionRepository;
 
@@ -44,7 +43,8 @@ public class ChartService {
     private List<Transaction> filterTransactions(List<Transaction> transactions) {
         return transactions.stream()
                 .filter(transaction -> {
-                    return transaction.getAmount() != 0 && Category.TRANSFER != transaction.getCategory();
+                    return transaction.getAmount() != 0 && (transaction.getCategory() == null
+                            || transaction.getCategory().isUsedInCalculations());
                 })
                 .toList();
     }

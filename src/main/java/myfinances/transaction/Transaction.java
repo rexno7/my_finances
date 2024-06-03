@@ -24,7 +24,7 @@ public class Transaction {
   @NotBlank(message = "rawString is required")
   private String rawString;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "account_id", referencedColumnName = "id")
   private Account account;
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import myfinances.transaction.Category;
+import myfinances.transaction.Transaction;
 import myfinances.transaction.TransactionRepository;
 
 @Service
@@ -18,17 +19,16 @@ public class ChartService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public List<IChartEntry> getChartEntriesBetween(Date startDate, Date endDate) {
-        return filterEntries(
-            transactionRepository.findAllBetweenDatesAndGroupByMerchant(startDate, endDate));
+    public List<Transaction> getTransactionsBefore(Date endDate) {
+        return filterTransactions(transactionRepository.findByTransactionDateBefore(endDate));
     }
 
-    public List<IChartEntry> getChartEntriesBefore(Date endDate) {
-        return filterEntries(transactionRepository.findAllBeforeDateAndGroupByMerchant(endDate));
+    public List<Transaction> getTransactionsAfter(Date startDate) {
+        return filterTransactions(transactionRepository.findByTransactionDateAfter(startDate));
     }
 
-    public List<IChartEntry> getChartEntriesAfter(Date startDate) {
-        return filterEntries(transactionRepository.findAllAfterDateAndGroupByMerchant(startDate));
+    public List<Transaction> getTransactionsBetween(Date startDate, Date endDate) {
+        return filterTransactions(transactionRepository.findByTransactionDateBetween(startDate, endDate));
     }
 
     public Date StringToDate(String dateString) throws NumberFormatException {
@@ -41,9 +41,11 @@ public class ChartService {
         return Date.from(LocalDate.of(year, month, day).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    private List<IChartEntry> filterEntries(List<IChartEntry> entries) {
-        return entries.stream()
-                .filter(entry -> entry.getAmount() > 0 && Category.TRANSFER != entry.getCategory())
+    private List<Transaction> filterTransactions(List<Transaction> transactions) {
+        return transactions.stream()
+                .filter(transaction -> {
+                    return transaction.getAmount() != 0 && Category.TRANSFER != transaction.getCategory();
+                })
                 .toList();
     }
 }

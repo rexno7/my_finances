@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import myfinances.transaction.Transaction;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
@@ -19,11 +22,10 @@ public class ChartController {
     @Autowired
     private ChartService chartService;
 
-    @GetMapping
-    public String getTimeFrame(Model model,
+    @GetMapping()
+    public String getTransactionChart(Model model,
             @RequestParam(required = false) String before,
             @RequestParam(required = false) String after) {
-
         Date startDate = null;
         Date endDate = null;
         try {
@@ -42,15 +44,15 @@ public class ChartController {
             endDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         }
 
-        List<IChartEntry> entries;
+        List<Transaction> entries;
         if (endDate == null) {
-            entries = chartService.getChartEntriesAfter(startDate);
+            entries = chartService.getTransactionsAfter(startDate);
         } else if (startDate == null) {
-            entries = chartService.getChartEntriesBefore(endDate);
+            entries = chartService.getTransactionsBefore(endDate);
         } else {
-            entries = chartService.getChartEntriesBetween(startDate, endDate);
+            entries = chartService.getTransactionsBetween(startDate, endDate);
         }
-        model.addAttribute("chartEntries", entries);
+        model.addAttribute("transactions", entries);
         return "transaction-chart";
     }
 }

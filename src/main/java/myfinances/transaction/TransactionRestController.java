@@ -20,9 +20,6 @@ public class TransactionRestController {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    // @Autowired
-    // private CategoryHolder categoryHolder;
-
     @Autowired
     private CategoryService categoryService;
 

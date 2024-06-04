@@ -53,7 +53,7 @@
 					<select class="editable-dropdown" th:data-id=${transaction.id} data-field="category">
 						<option value="">UNDEFINED</option>
 						<option th:each="category : ${allCategories}"
-								th:value="${category}"
+								th:value="${category.name}"
 								th:text="${category.name}"
 								th:selected="${transaction.category} == ${category}"></option>
 					</select>

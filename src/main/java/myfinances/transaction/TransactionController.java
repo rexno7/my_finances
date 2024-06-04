@@ -1,5 +1,6 @@
 package myfinances.transaction;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,7 +42,10 @@ public class TransactionController {
 
   @ModelAttribute("allCategories")
   public List<Category> populateCategories() {
-      return categoryService.findAll();
+      return categoryService.findAll()
+          .stream()
+          .sorted(Comparator.comparing(Category::getName))
+          .toList();
   }
 
   @GetMapping()

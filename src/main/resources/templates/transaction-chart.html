@@ -7,11 +7,16 @@
   </head>
   <body>
     <div th:replace="~{fragments/navbar :: navbar(3)}"></div>
-    <div style="width: 800px; height: auto;">
-        <canvas id="transactionChart"></canvas>
+    <div id="chart-options">
+      <button onclick="chart = displayDoughnutChart(transactionsJS, 'CATEGORY', chart)">Category</button>
+      <button onclick="chart = displayDoughnutChart(transactionsJS, 'MERCHANT', chart)">Merchant</button>
+    </div>
+    <div style="width: 800px; height: auto;" onload="displayDoughnutChart(transactions, 'CATEGORY')">
+      <canvas id="transactionChart"></canvas>
     </div>
     <script th:inline="javascript">
-        displayDoughnutChart(/*[[${transactions}]]*/ []);
+      var transactionsJS = /*[[${transactions}]]*/ [];
+      var chart = displayDoughnutChart(transactionsJS, "MERCHANT");
     </script>
   </body>
 </html>

@@ -16,3 +16,16 @@ $(document).ready(function() {
         });
     });
 });
+
+function runAllRules() {
+    $.ajax({
+        url: `/myfinances/rule/runAll`,
+        method: 'GET',
+        success: function(response) {
+            console.log(`rules run successfully`);
+        },
+        error: function(xhr, status, error) {
+            console.log(`Rules failed to run: ${error}`);
+        }
+    });
+}

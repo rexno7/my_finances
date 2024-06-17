@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import myfinances.transaction.Transaction;
+import myfinances.transaction.TransactionService;
 
 @Service
 public class RuleService {
     
     @Autowired
     private RuleRepository ruleRepository;
+
+    @Autowired
+    private TransactionService transactionService;
 
     public List<Rule> findAll() {
         return ruleRepository.findAll();
@@ -30,5 +34,11 @@ public class RuleService {
                 rule.runOn(transaction);
             }
         }
+    }
+
+    public void runAll() {
+        List<Transaction> transactions = transactionService.findAll();
+        executeRules(transactions);
+        transactionService.saveAll(transactions);
     }
 }

@@ -4,6 +4,8 @@
         <script th:replace="~{fragments/heading :: headerFragment}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" th:src="@{/js/rules.js}"></script>
+        <link rel="stylesheet" type="text/css" href="../static/css/rules.css" 
+	          th:href="@{/css/rules.css}"></link>
     </head>
     <body>
         <div th:replace="~{fragments/navbar :: navbar(5)}"></div>
@@ -40,7 +42,14 @@
             </table>
         </div>
         <div>
-            <h1>Rules</h1>
+            <div id="rules-head">
+                <div>
+                    <h1>Rules</h1>
+                </div>
+                <div>
+                    <button onclick="runAllRules()">Run Rules</button>
+                </div>
+            </div>
             <table id="rules-table">
                 <thead>
                     <tr>

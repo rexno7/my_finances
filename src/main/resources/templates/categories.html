@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <script th:replace="~{fragments/heading :: headerFragment}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" th:src="@{/js/rules.js}"></script>
+    </head>
+    <body>
+        <div th:replace="~{fragments/navbar :: navbar(6)}"></div>
+        <div>
+            <h1>Add Category</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parent</th>
+                        <th>Used in Calculations</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <form action="#" th:action="@{/categories/add}" th:object="${newCategory}" method="post">
+                            <td><input type="text" th:field="*{name}"></td>
+                            <td>
+                                <select th:field="*{parent}">
+                                    <option value=""></option>
+                                    <option th:each="category : ${allCategories}"
+                                    th:value="${category.id}"
+                                    th:text="${category.name}"></option>
+                                </select>
+                            </td>
+                            <td><input type="checkbox" th:field="*{usedInCalculations}" th:value="${usedInCalculations}"></td>
+                            <td><input type="Submit" value="Add"></td>
+                        </form>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>Categories</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parent</th>
+                        <th>Children</th>
+                        <th>Used in Calculations</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="category : ${categories}">
+                        <td th:text="${category.name}"></td>
+                        <td th:text="${category.parent != null ? category.parent.name : null}"></td>
+                        <td th:text="${category.children != null ? category.children.size : null}"></td>
+                        <td th:text="${category.usedInCalculations}"></td>
+                        <td>
+                            <form th:action="@{'/categories/delete/' + ${category.id}}" method="post">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

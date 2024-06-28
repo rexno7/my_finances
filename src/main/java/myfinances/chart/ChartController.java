@@ -1,8 +1,6 @@
 package myfinances.chart;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,34 +23,35 @@ public class ChartController {
     @GetMapping()
     public String getTransactionChart(Model model,
             @RequestParam(required = false) String before,
-            @RequestParam(required = false) String after) {
-        Date startDate = null;
-        Date endDate = null;
-        try {
-            if (after != null) {
-                startDate = chartService.StringToDate(after);
-            }
-            if (before != null) {
-                endDate = chartService.StringToDate(before);
-            }
-        } catch (NumberFormatException e) {
-            startDate = null;
-            endDate = null;
-        }
-        if (startDate == null && endDate == null) {
-            startDate = Date.from(LocalDate.now().minusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-            endDate = Date.from(LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        }
+            @RequestParam(required = false) String after,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month) {
 
         List<Transaction> entries;
-        if (endDate == null) {
-            entries = chartService.getTransactionsAfter(startDate);
-        } else if (startDate == null) {
-            entries = chartService.getTransactionsBefore(endDate);
+        if (before != null || after != null) {
+            entries = chartService.getTransactionsByTimeRange(before, after);
+        } else if (month != null) {
+            entries = chartService.getTransactionsByMonth(year == null ? LocalDate.now().getYear() : year, month);
         } else {
-            entries = chartService.getTransactionsBetween(startDate, endDate);
+            entries = chartService.geTransactionsByCurrentMonth();    
         }
+        
+        model.addAttribute("spendingText", generateSpendingText(before, after, year, month));
         model.addAttribute("transactions", entries);
         return "transaction-chart";
+    }
+
+    private String generateSpendingText(String before, String after, Integer year, Integer month) {
+        if (before != null && after != null) {
+            return "Spending for " + after + " - " + before;
+        } else if (before != null) {
+            return "Spending before " + before;
+        } else if (after != null) {
+            return "Spending after " + after;
+        } else if (month != null) {
+            return "Spending for " + month + "/" + (year != null ? year : LocalDate.now().getYear());
+        }
+        LocalDate now = LocalDate.now();
+        return "Spending for " + now.getMonthValue() + "/" + now.getYear();
     }
 }

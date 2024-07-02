@@ -78,15 +78,15 @@ table td {
 	margin-right: 0.5em;
 }
 
-#transaction-table td:first-child input {
+#transaction-table td:nth-child(2) input {
 	width: 70px;
 }
 
-#transaction-table td:nth-child(3) input {
+#transaction-table td:nth-child(4) input {
 	width: 400px;
 }
 
-#transaction-table td:nth-child(4) input {
+#transaction-table td:nth-child(5) input {
 	width: 100px;
 }
 
@@ -131,4 +131,36 @@ table td {
 	background: none;
 	box-shadow: none;
 	border-radius: 0px;
+}
+
+#chart-wrapper {
+	width: 100%;
+}
+
+#chart-container {
+	display: flex;
+	flex: 2 2 1 1;
+	flex-wrap: wrap;
+	row-gap: 15px;
+	height: auto;
+	width: 600px;
+	justify-content: center;
+	margin-bottom: 20px;
+}
+
+#chart-container .div-button {
+	width: max-content;
+	flex-grow: 2;
+}
+
+.div-button {
+	background-color: grey;
+	color: white;
+	padding: 5px;
+	text-align: center;
+	user-select: none;
+}
+
+.div-button-active {
+	background-color: #2b6a2b;
 }

@@ -1,4 +1,15 @@
 function displayDoughnutChart(transactions, groupBy, chart) {
+    // Select the active button
+    const categoryButton = document.getElementById('category-button');
+    const merchantButton = document.getElementById('merchant-button');
+    const activeButtons = document.querySelectorAll('.div-button-active');
+    activeButtons.forEach((div) => div.classList.remove('div-button-active'));
+    if (groupBy === "CATEGORY") {
+        categoryButton.classList.add('div-button-active');
+    } else {
+        merchantButton.classList.add('div-button-active');
+    }
+
     // Destroy chart if already existing
     if (chart !== undefined) {
         chart.destroy();
@@ -22,7 +33,7 @@ function displayDoughnutChart(transactions, groupBy, chart) {
             .format(amounts.reduce((total, amount) => total + amount, 0));
     
     // Create chart
-    const ctx = document.getElementById('transactionChart').getContext('2d');
+    const ctx = document.getElementById('transaction-chart').getContext('2d');
     const spendingChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -50,6 +61,7 @@ function displayDoughnutChart(transactions, groupBy, chart) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 legend: {
                     display: false,

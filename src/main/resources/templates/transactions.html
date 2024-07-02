@@ -36,6 +36,7 @@
 	        <table id="transaction-table">
 	          <thead>
 	            <tr>
+				  <th><input type="checkbox"></th>
 	              <th th:replace="~{fragments/sorting :: sorting('transactionDate', 'Date')}">Date</th>
 	              <th th:replace="~{fragments/sorting :: sorting('account.accountNumber', 'Account')}"></th>
 	              <th th:replace="~{fragments/sorting :: sorting('merchant', 'Merchant')}"></th>
@@ -45,6 +46,7 @@
 	          </thead>
 	          <tbody>
 	            <tr th:each="transaction : ${transactionPage.content}">
+				  <td><input type="checkbox"></td>
 	              <td><input th:value="${#dates.format(transaction.transactionDate, 'MM/dd')}" th:data-id=${transaction.id} data-field="date" class="number editable"></td>
 	              <td th:text="${transaction.account.accountNumber}"></td>
 	              <td><input th:value="${transaction.nickname == null} ? ${transaction.merchant} : ${transaction.nickname}" th:data-id=${transaction.id} data-field="nickname" class="editable"></td>

@@ -33,9 +33,9 @@ public class ChartController {
         } else if (month != null) {
             entries = chartService.getTransactionsByMonth(year == null ? LocalDate.now().getYear() : year, month);
         } else {
-            entries = chartService.geTransactionsByCurrentMonth();    
+            entries = chartService.geTransactionsByCurrentMonth();
         }
-        
+
         model.addAttribute("spendingText", generateSpendingText(before, after, year, month));
         model.addAttribute("transactions", entries);
         return "transaction-chart";
@@ -49,7 +49,9 @@ public class ChartController {
         } else if (after != null) {
             return "Spending after " + after;
         } else if (month != null) {
-            return "Spending for " + month + "/" + (year != null ? year : LocalDate.now().getYear());
+            LocalDate now = LocalDate.now();
+            return "Spending for " + (LocalDate.of(now.getYear(), month, 1).getMonth().name()) + " "
+                    + (year != null ? year : now.getYear());
         }
         LocalDate now = LocalDate.now();
         return "Spending for " + now.getMonthValue() + "/" + now.getYear();
